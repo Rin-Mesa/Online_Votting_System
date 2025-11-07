@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Voting System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">Voting System</h1>
+            <ul class="nav-links">
+                <li><span>Admin: {{ session.get('username') }}</span></li>
+                <li><a href="{{ url_for('results') }}">Results</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="admin-container">
+            <h2>Admin Panel</h2>
+
+            <div class="admin-section">
+                <h3>Add Candidate</h3>
+                <form method="POST">
+                    <input type="hidden" name="action" value="add_candidate">
+                    <div class="form-group">
+                        <label for="name">Candidate Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <textarea id="description" name="description" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Candidate</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h3>Manage Candidates</h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Votes</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for candidate in candidates %}
+                        <tr data-candidate-id="{{ candidate.id }}">
+                            <td class="candidate-name-display">{{ candidate.name }}</td>
+                            <td class="candidate-desc-display">{{ candidate.description or '' }}</td>
+                            <td>{{ candidate.votes }}</td>
+                            <td>
+                                <button class="btn btn-warning btn-small edit-btn" data-id="{{ candidate.id }}">Edit</button>
+                                <form method="POST" class="edit-form" style="display:none;">
+                                    <input type="hidden" name="action" value="edit_candidate">
+                                    <input type="hidden" name="candidate_id" value="{{ candidate.id }}">
+                                    <input type="text" name="name" value="{{ candidate.name }}" required>
+                                    <textarea name="description" rows="2">{{ candidate.description }}</textarea>
+                                    <button type="submit" class="btn btn-success btn-small">Save</button>
+                                    <button type="button" class="btn btn-secondary btn-small cancel-btn">Cancel</button>
+                                </form>
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="action" value="delete_candidate">
+                                    <input type="hidden" name="candidate_id" value="{{ candidate.id }}">
+                                    <button type="submit" class="btn btn-danger btn-small"
+                                        onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="admin-section">
+                <h3>System Actions</h3>
+                <form method="POST">
+                    <input type="hidden" name="action" value="reset_votes">
+                    <button type="submit" class="btn btn-danger"
+                        onclick="return confirm('This will reset all votes. Are you sure?')">Reset All Votes</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h3>Registered Users ({{ users|length }})</h3>
+                <p class="section-info">Total Votes Cast: {{ total_votes }}</p>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Registered</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>
+                                {% if user.is_admin %}
+                                <span class="badge badge-admin">Admin</span>
+                                {% else %}
+                                <span class="badge badge-user">User</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                {% if not user.is_admin or user.id != session.get('user_id') %}
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="action" value="delete_user">
+                                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                                    <button type="submit" class="btn btn-danger btn-small"
+                                        onclick="return confirm('Delete user {{ user.username }}?')">Delete</button>
+                                </form>
+                                {% else %}
+                                <span class="text-muted">Current User</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

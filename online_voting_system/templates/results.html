@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - Voting System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">Voting System</h1>
+            <ul class="nav-links">
+                {% if session.get('username') %}
+                <li><span>Welcome, {{ session.get('username') }}</span></li>
+                {% if not session.get('is_admin') %}
+                <li><a href="{{ url_for('vote') }}">Vote</a></li>
+                {% else %}
+                <li><a href="{{ url_for('admin') }}">Admin Panel</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="results-container">
+            <h2>Voting Results</h2>
+            <div class="results-stats">
+                <div class="stat-box">
+                    <span class="stat-label">Total Votes Cast:</span>
+                    <span class="stat-value">{{ total_votes }}</span>
+                </div>
+            </div>
+            <div class="results-list">
+                {% for candidate in candidates %}
+                <div class="result-item">
+                    <div class="result-header">
+                        <h3>{{ candidate.name }}</h3>
+                        <span class="vote-count">{{ candidate.votes }} votes</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"
+                            style="width: {% if total_votes > 0 %}{{ (candidate.votes / total_votes) * 100 }}{% else %}0{% endif %}%">
+                        </div>
+                    </div>
+                    <p class="percentage">{% if total_votes > 0 %}{{ "%.1f"|format((candidate.votes / total_votes) *
+                        100) }}%{% else %}0%{% endif %}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
