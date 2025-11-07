@@ -15,7 +15,7 @@ def create_admin_user(username='admin', password='admin123'):
         # Check if admin already exists
         existing_admin = User.query.filter_by(username=username).first()
         if existing_admin:
-            print(f"Admin user '{username}' already exists!")
+            print(f"[INFO] Admin user '{username}' already exists!")
             return False
         
         admin = User(
@@ -25,7 +25,7 @@ def create_admin_user(username='admin', password='admin123'):
         )
         db.session.add(admin)
         db.session.commit()
-        print(f"✓ Admin user '{username}' created successfully!")
+        print(f"[SUCCESS] Admin user '{username}' created successfully!")
         print(f"  Username: {username}")
         print(f"  Password: {password}")
         return True
@@ -36,7 +36,7 @@ def create_sample_candidates():
     with app.app_context():
         # Check if candidates already exist
         if Candidate.query.first():
-            print("Candidates already exist in the database!")
+            print("[INFO] Candidates already exist in the database!")
             return False
         
         candidates = [
@@ -62,7 +62,7 @@ def create_sample_candidates():
             db.session.add(candidate)
         
         db.session.commit()
-        print(f"✓ {len(candidates)} sample candidates created successfully!")
+        print(f"[SUCCESS] {len(candidates)} sample candidates created successfully!")
         for candidate in candidates:
             print(f"  - {candidate.name}")
         return True

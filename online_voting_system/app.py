@@ -3,17 +3,22 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from datetime import datetime
+from config import DB_CONFIG
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this'
 
-# Create instance folder if it doesn't exist
-instance_path = os.path.join(os.path.dirname(__file__), 'instance')
-os.makedirs(instance_path, exist_ok=True)
+# MySQL Configuration
+DB_USER = DB_CONFIG['Username']
+DB_PASS = DB_CONFIG['Password']
+DB_HOST = DB_CONFIG['Host']
+DB_PORT = DB_CONFIG['Port']
+DB_NAME = DB_CONFIG['DatabaseName']
 
-db_path = os.path.join(instance_path, 'votes.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Construct the database URI directly
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{DB_USER}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = DB_CONFIG['SQLALCHEMY_TRACK_MODIFICATIONS']
+app.config['SQLALCHEMY_ECHO'] = True  # This will print SQL queries to console for debugging
 
 db = SQLAlchemy(app)
 

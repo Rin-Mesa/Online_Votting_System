@@ -84,7 +84,7 @@ body {
 .hero {
     text-align: center;
     padding: 5rem 2rem;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.305);
     backdrop-filter: blur(20px);
     color: #333;
     border-radius: 20px;
@@ -195,7 +195,7 @@ body {
     box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
 }
 
-.btn-warning{
+.btn-warning {
     background: linear-gradient(135deg, #20c41d 0%, #05aa44 100%);
     color: white;
     box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
@@ -239,7 +239,7 @@ body {
 }
 
 .form-group label {
-    display: block;
+    display: flex;
     margin-bottom: 0.7rem;
     font-weight: 600;
     color: #333;
@@ -253,10 +253,13 @@ body {
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
     font-size: 1rem;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.074);
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    color: #333;
+    font-weight: 500;
+    border: 1px solid #ccc;
 }
 
 .form-group input:focus,

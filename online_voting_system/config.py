@@ -53,3 +53,14 @@ LOG_FILE = os.path.join(BASE_DIR, 'logs', 'app.log')
 # Create logs directory if it doesn't exist
 os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
 
+# Configuration for MariaDB Database
+DB_CONFIG = {
+    'DB_ENGINE': 'mysql+pymysql',
+    'SQLALCHEMY_DATABASE_URI': 'mysql+pymysql://{Username}@{Host}:{Port}/{DatabaseName}',
+    'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+    'DatabaseName': 'online_voting_system',
+    'Username': 'root',
+    'Password': '',  # Empty password since we're not using one
+    'Host': 'localhost',
+    'Port': '3306'
+}
